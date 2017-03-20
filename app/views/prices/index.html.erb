@@ -1,0 +1,82 @@
+<style>
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+
+body{
+	font-family:'Open Sans';
+	color:white;
+	background-color:#162C42;
+}
+.myblock{
+	text-align:center !important;
+	background-color:white;
+	border-radius:4px !important;
+	padding:20px;
+}
+</style>
+<!-- load chart -->
+<div style="text-align:center" class="col-md-8 col-md-offset-2">
+	<h1>Check BTC</h1>
+</div>
+<br>
+<div style="background-color:white;" class="myblock col-md-8 col-md-offset-2">
+	<div style="text-align:center;">
+		<div class="l-chart">
+		  <div class="aspect-ratio">
+		    <canvas id="chart"></canvas>
+		  </div>
+		</div>
+	</div>
+</div>
+<!-- end chart -->
+<br><br>
+<div style="margin-top:40px;" class="myblock col-md-8 col-md-offset-2">
+	<div>
+		<% @prices.each do |price| %>
+			<p><span style="padding:20px;color:black;">Price: <strong style="color:rgba(241,196,15,1);"><%= price.price %></strong></span><span style="padding:20px;color:black;">Time: <strong style="color:rgba(241,196,15,1);"><%= price.created_at %></strong></span></p>
+		<% end %>
+	</div>
+</div>
+
+<script>
+	Chart.defaults.global.animationEasing = 'easeInOutQuad',
+ 	Chart.defaults.global.responsive = true;
+	Chart.defaults.global.scaleOverride = false;
+	Chart.defaults.global.scaleShowLabels = false;
+	Chart.defaults.global.scaleSteps = 25;
+	Chart.defaults.global.scaleStepWidth = 100;
+	Chart.defaults.global.scaleStartValue = 0;
+	Chart.defaults.global.tooltipFontFamily = 'Open Sans';
+	Chart.defaults.global.tooltipFillColor = '#FFFFFF';
+	Chart.defaults.global.tooltipFontColor = '#6E6E6E';
+	Chart.defaults.global.tooltipCaretSize = 0;
+	Chart.defaults.global.maintainAspectRatio = true;
+
+	Chart.defaults.Line.scaleShowHorizontalLines = false;
+	Chart.defaults.Line.scaleShowHorizontalLines = false;
+	Chart.defaults.Line.scaleGridLineColor = 'rgba(0,0,0,0)';
+	Chart.defaults.Line.scaleLineColor = 'rgba(0,0,0,0)';
+
+	var chart = document.getElementById('chart').getContext('2d'),
+	  gradient = chart.createLinearGradient(0, 0, 0, 450);
+	var get_data = <%= data_set %>
+	var data = {
+	  	labels: get_data[1],
+	  	datasets: [{
+	    label: 'BTC Tracker',
+	    fillColor: gradient,
+	    strokeColor: '#F1C40F',
+	    pointColor: 'white',
+	    pointStrokeColor: 'rgba(0,0,0,1)',
+	    pointHighlightFill: '#fff',
+	    pointHighlightStroke: 'rgba(0,0,0,1)',
+
+	    data: get_data[0]
+	  }]
+	};
+
+	gradient.addColorStop(0, 'rgba(241,196,15,0.5)');
+	gradient.addColorStop(0.5, 'rgba(241,196,15,0.25)');
+	gradient.addColorStop(1, 'rgba(241,196,15,0)');
+
+	var chart = new Chart(chart).Line(data);
+</script>
